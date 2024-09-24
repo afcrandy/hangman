@@ -1,6 +1,6 @@
 class Game:
     """
-    Creates an instance of GameRound
+    Creates an instance of Game
     """
 
     def __init__(self):
