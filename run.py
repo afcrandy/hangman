@@ -10,9 +10,35 @@ def print_welcome():
     print('by Andrew Reid')
     print()
 
+def is_valid(guess):
+    """
+    Test if a provided guess is a valid one
+    """
+    # assert guess is a single character in length
+    if len(guess) != 1:
+        return False
+    
+    # assert guess is a letter
+    if guess not in 'abcdefghijklmnopqrstuvwxyz':
+        return False
+    
+    # return true otherwise
+    return True
+
+def print_game_state(game):
+    """
+    Takes a Game object and prints out the current state of the board
+    Includes the Hangman, game string, and incorrect guess
+    """
+    print('Board')
+    print()
+    print(game.game_string())
+    print()
+    print(f"Already guessed: {game.guessed_letters()}\n")
+
 def main():
     """
-    Run game loop
+    Run game functions
     """
 
     # prompt user to begin game or exit program
@@ -36,6 +62,30 @@ def main():
     print()
     print(game.game_string())
     print()
+
+    # game loop
+    while game.guesses_left() and not game.complete():
+        guess = input('Guess a letter: ').lower()
+        print('\n\n')
+
+        # if guess is valid
+        if is_valid(guess):
+            if game.already_guessed(guess):
+                print("You've already guessed that letter")
+                print("Please select another\n")
+                continue
+            else:
+                # handle valid guess
+                if game.check(guess):
+                    print(f"Well done, {guess} is in the word\n")
+                else:
+                    print(f"Unlucky, {guess} is not in the word\n")
+                
+                # print out game state
+                print_game_state(game)
+        else:
+            print('Invalid character. Please select another\n')
+            continue
 
 
 print_welcome()
