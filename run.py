@@ -1,5 +1,6 @@
 from art import *
 from game import Game
+import re
 
 def print_welcome():
     """
@@ -39,6 +40,19 @@ def print_game_state(game):
     print()
     print(f"Already guessed: {game.guessed_letters()}\n")
 
+def load_wordlist():
+    """
+    Retrieve the list of potential words and filter out any invalid words
+    i.e. any punctutation or non-alphabetic characters
+    """
+    with open('wordlist.txt', encoding="utf-8") as f:
+        words = f.readlines()
+    
+    # filter out unwanted characters
+    allowed_chars = 'abcdefghijklmnopqrstuvwxyz'
+    search_string = f"[^{allowed_chars}]"
+    return [word for word in words if re.search(search_string, word) is None]
+
 def main():
     """
     Run game functions
@@ -61,7 +75,7 @@ def main():
             print()
     
     # if user initiates Game, init an instance of Game and set difficulty
-    game = Game()
+    game = Game(load_wordlist())
     game.difficulty = 'hard' if start_action == 'h' else 'easy'
 
     # print number of letters to user and initial game layout

@@ -1,3 +1,5 @@
+import random
+
 class Game:
     """
     Creates an instance of Game
@@ -10,11 +12,13 @@ class Game:
     You have 10 guesses on easy mode, 6 on hard, to save him
     """
 
-    def __init__(self):
-        self.word = "alternative"
+    def __init__(self, wordlist):
         self.difficulty = 'easy'
         self.correct_guesses = set()
         self.incorrect_guesses = set()
+
+        # select random word from list passed in to init
+        self.word = random.choice(wordlist).lower()
     
     def word_length(self):
         return len(self.word)
