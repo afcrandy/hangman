@@ -3,6 +3,13 @@ class Game:
     Creates an instance of Game
     """
 
+    # define game instructions for all games
+    instructions = """
+    Guess letters you think are in the word
+    Each wrong guess gets the man closer to his doom
+    You have 10 guesses on easy mode, 6 on hard, to save him
+    """
+
     def __init__(self):
         self.word = "alternative"
         self.difficulty = 'easy'

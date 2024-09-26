@@ -51,6 +51,8 @@ def main():
         # handle valid and invalid choices
         if start_action == 'p' or start_action == 'h':
             print()
+            print(Game.instructions)
+            print()
             break
         elif start_action == 'x':
             return
