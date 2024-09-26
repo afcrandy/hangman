@@ -30,9 +30,12 @@ def print_game_state(game):
     Takes a Game object and prints out the current state of the board
     Includes the Hangman, game string, and incorrect guess
     """
-    print('Board')
-    print()
+    # determine difficulty and add offset if playing on 'easy'
+    offset = 0 if game.difficulty == 'easy' else 3
+
     print(game.game_string())
+    print()
+    print(STAGE_IMAGES[game.wrong_guesses() + offset])
     print()
     print(f"Already guessed: {game.guessed_letters()}\n")
 
@@ -60,8 +63,7 @@ def main():
     # print number of letters to user and initial game layout
     print(f"Word selected. It has {game.word_length()} letters")
     print()
-    print(game.game_string())
-    print()
+    print_game_state(game)
 
     # game loop
     while game.guesses_left() and not game.complete():

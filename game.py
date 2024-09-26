@@ -21,13 +21,19 @@ class Game:
             progress.append(char if char in self.correct_guesses else '_')
         return ' '.join(progress)
     
+    def wrong_guesses(self):
+        """
+        Return how many guesses user has remaining
+        """
+        return len(self.incorrect_guesses)
+    
     def guesses_left(self):
         """
         Return whether user has any guesses remaining
         """
         # determine number of guesses allowed based on difficulty
         guesses_allowed = 10 if self.difficulty == 'easy' else 7
-        return len(self.incorrect_guesses) < guesses_allowed
+        return self.wrong_guesses() < guesses_allowed
     
     def complete(self):
         """
