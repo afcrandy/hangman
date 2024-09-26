@@ -31,7 +31,7 @@ def print_game_state(game):
     Includes the Hangman, game string, and incorrect guess
     """
     # determine difficulty and add offset if playing on 'easy'
-    offset = 0 if game.difficulty == 'easy' else 3
+    offset = 0 if game.difficulty == 'easy' else 4
 
     print(game.game_string())
     print()
@@ -46,9 +46,10 @@ def main():
 
     # prompt user to begin game or exit program
     while True:
-        start_action = input("Press 'p' to play or 'x' to exit\n").lower()
+        prompt = "Press 'p' to play, 'h' for hard difficulty, or 'x' to exit"
+        start_action = input(f"{prompt}\n").lower()
         # handle valid and invalid choices
-        if start_action == 'p':
+        if start_action == 'p' or start_action == 'h':
             print()
             break
         elif start_action == 'x':
@@ -57,8 +58,9 @@ def main():
             print('Sorry but command was invalid')
             print()
     
-    # if user initiates Game, init an instance of Game
+    # if user initiates Game, init an instance of Game and set difficulty
     game = Game()
+    game.difficulty = 'hard' if start_action == 'h' else 'easy'
 
     # print number of letters to user and initial game layout
     print(f"Word selected. It has {game.word_length()} letters")

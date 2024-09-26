@@ -32,7 +32,7 @@ class Game:
         Return whether user has any guesses remaining
         """
         # determine number of guesses allowed based on difficulty
-        guesses_allowed = 10 if self.difficulty == 'easy' else 7
+        guesses_allowed = 10 if self.difficulty == 'easy' else 6
         return self.wrong_guesses() < guesses_allowed
     
     def complete(self):
