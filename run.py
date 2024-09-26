@@ -10,6 +10,7 @@ def print_welcome():
     print(WELCOME_LOGO)
     print('by Andrew Reid')
     print()
+    print(Game.instructions)
 
 def is_valid(guess):
     """
@@ -38,7 +39,7 @@ def print_game_state(game):
     print()
     print(STAGE_IMAGES[game.wrong_guesses() + offset])
     print()
-    print(f"Already guessed: {game.guessed_letters()}\n")
+    print(f"Guesses: {game.guessed_letters()}\n\n")
 
 def load_wordlist():
     """
@@ -58,54 +59,71 @@ def main():
     Run game functions
     """
 
-    # prompt user to begin game or exit program
+    # loop to allow repeat plays
     while True:
-        prompt = "Press 'p' to play, 'h' for hard difficulty, or 'x' to exit"
-        start_action = input(f"{prompt}\n").lower()
-        # handle valid and invalid choices
-        if start_action == 'p' or start_action == 'h':
-            print()
-            print(Game.instructions)
-            print()
-            break
-        elif start_action == 'x':
-            return
-        else:
-            print('Sorry but command was invalid')
-            print()
-    
-    # if user initiates Game, init an instance of Game and set difficulty
-    game = Game(load_wordlist())
-    game.difficulty = 'hard' if start_action == 'h' else 'easy'
-
-    # print number of letters to user and initial game layout
-    print(f"Word selected. It has {game.word_length()} letters")
-    print()
-    print_game_state(game)
-
-    # game loop
-    while game.guesses_left() and not game.complete():
-        guess = input('Guess a letter: ').lower()
-        print('\n\n')
-
-        # if guess is valid
-        if is_valid(guess):
-            if game.already_guessed(guess):
-                print("You've already guessed that letter")
-                print("Please select another\n")
-                continue
+        # prompt user to begin game or exit program
+        while True:
+            prmt = "Press 'p' to play, 'h' for hard difficulty, or 'x' to exit"
+            start_action = input(f"{prmt}\n").lower()
+            # handle valid and invalid choices
+            if start_action == 'p' or start_action == 'h':
+                print()
+                break
+            elif start_action == 'x':
+                return
             else:
-                # handle valid guess
-                if game.check(guess):
-                    print(f"Well done, {guess} is in the word\n")
+                print('Sorry but command was invalid')
+                print()
+        
+        # if user initiates Game, init an instance of Game and set difficulty
+        game = Game(load_wordlist())
+        game.difficulty = 'hard' if start_action == 'h' else 'easy'
+
+        # print number of letters to user and initial game layout
+        print(f"Word selected. It has {game.word_length()} letters")
+        print()
+        # print_game_state(game)
+
+        # game loop
+        while game.guesses_left() and not game.complete():
+            print_game_state(game)
+            guess = input('Guess a letter:\n').lower()
+            print('\n')
+
+            # if guess is valid
+            if is_valid(guess):
+                if game.already_guessed(guess):
+                    print("You've already guessed that letter")
+                    print("Please select another\n")
+                    continue
                 else:
-                    print(f"Unlucky, {guess} is not in the word\n")
-                
-                # print out game state
-                print_game_state(game)
+                    # handle valid guess
+                    if game.check(guess):
+                        print(f"Well done, '{guess}' is in the word\n")
+                    else:
+                        print(f"Unlucky, '{guess}' is not in the word\n")
+                        
+            else:
+                print('Invalid character. Please select another\n')
+                continue
+        
+        # feedback to user; if game is complete, user won
+        if game.complete():
+            print('\nCongrats, you got it!')
+            
         else:
-            print('Invalid character. Please select another\n')
-            continue
+            print('\nBetter luck next time!')
+            print(f"The word was '{game.word}'")
+        
+        print_game_state(game)
+        print()
+
+        # prompt user to exit or restart
+        end_prompt = "Press 'x' to exit, or any other key to restart\n"
+        end_game = input(end_prompt).lower()
+        if end_game == 'x':
+            break
+        print()
 
 
 print_welcome()
