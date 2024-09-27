@@ -18,7 +18,7 @@ class Game:
         self.incorrect_guesses = set()
 
         # select random word from list passed in to init
-        self.word = random.choice(wordlist).lower()
+        self.word = random.choice(wordlist).lower().strip()
     
     def word_length(self):
         return len(self.word)

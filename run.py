@@ -41,6 +41,15 @@ def print_game_state(game):
     print()
     print(f"Guesses: {game.guessed_letters()}\n\n")
 
+def filter_invalid_word(word):
+    """
+    Given a string, filter out any with invalid characters
+    valid characters: abcdefghijklmnopqrstuvwxyz
+    """
+    allowed_chars = 'abcdefghijklmnopqrstuvwxyz'
+    search_string = f"[^{allowed_chars}]"
+    return re.search(search_string, word.strip()) is None
+
 def load_wordlist():
     """
     Retrieve the list of potential words and filter out any invalid words
@@ -48,11 +57,8 @@ def load_wordlist():
     """
     with open('wordlist.txt', encoding="utf-8") as f:
         words = f.readlines()
-    
-    # filter out unwanted characters
-    allowed_chars = 'abcdefghijklmnopqrstuvwxyz'
-    search_string = f"[^{allowed_chars}]"
-    return [word for word in words if re.search(search_string, word) is None]
+
+    return [word for word in words if filter_invalid_word(word)]
 
 def main():
     """
@@ -109,11 +115,11 @@ def main():
         
         # feedback to user; if game is complete, user won
         if game.complete():
-            print('\nCongrats, you got it!')
+            print('\nCongrats, you got it!\n')
             
         else:
             print('\nBetter luck next time!')
-            print(f"The word was '{game.word}'")
+            print(f"The word was '{game.word}'\n")
         
         print_game_state(game)
         print()
