@@ -1,6 +1,7 @@
-from art import *
+from art import WELCOME_LOGO
 from game import Game
 import re
+
 
 def print_welcome():
     """
@@ -12,6 +13,7 @@ def print_welcome():
     print()
     print(Game.instructions)
 
+
 def is_valid(guess):
     """
     Test if a provided guess is a valid one
@@ -19,27 +21,26 @@ def is_valid(guess):
     # assert guess is a single character in length
     if len(guess) != 1:
         return False
-    
+
     # assert guess is a letter
     if guess not in 'abcdefghijklmnopqrstuvwxyz':
         return False
-    
+
     # return true otherwise
     return True
+
 
 def print_game_state(game):
     """
     Takes a Game object and prints out the current state of the board
     Includes the Hangman, game string, and incorrect guess
     """
-    # determine difficulty and add offset if playing on 'easy'
-    offset = 0 if game.difficulty == 'easy' else 4
-
     print(game.game_string())
     print()
-    print(STAGE_IMAGES[game.wrong_guesses() + offset])
+    print(game)
     print()
     print(f"Guesses: {game.guessed_letters()}\n\n")
+
 
 def filter_invalid_word(word):
     """
@@ -50,15 +51,21 @@ def filter_invalid_word(word):
     search_string = f"[^{allowed_chars}]"
     return re.search(search_string, word.strip()) is None
 
+
 def load_wordlist():
     """
     Retrieve the list of potential words and filter out any invalid words
     i.e. any punctutation or non-alphabetic characters
     """
-    with open('wordlist.txt', encoding="utf-8") as f:
-        words = f.readlines()
+    try:
+        with open('wordlist.txt', encoding="utf-8") as f:
+            words = f.readlines()
+    except OSError as e:
+        errno, strerror = e.args
+        print(f"Wordlist failed to load with error, {errno}: {strerror}")
 
     return [word for word in words if filter_invalid_word(word)]
+
 
 def main():
     """
@@ -80,7 +87,7 @@ def main():
             else:
                 print('Sorry but command was invalid')
                 print()
-        
+
         # if user initiates Game, init an instance of Game and set difficulty
         game = Game(load_wordlist())
         game.difficulty = 'hard' if start_action == 'h' else 'easy'
@@ -88,7 +95,6 @@ def main():
         # print number of letters to user and initial game layout
         print(f"Word selected. It has {game.word_length()} letters")
         print()
-        # print_game_state(game)
 
         # game loop
         while game.guesses_left() and not game.complete():
@@ -108,19 +114,19 @@ def main():
                         print(f"Well done, '{guess}' is in the word\n")
                     else:
                         print(f"Unlucky, '{guess}' is not in the word\n")
-                        
+
             else:
                 print('Invalid character. Please select another\n')
                 continue
-        
+
         # feedback to user; if game is complete, user won
         if game.complete():
             print('\nCongrats, you got it!\n')
-            
+
         else:
             print('\nBetter luck next time!')
             print(f"The word was '{game.word}'\n")
-        
+
         print_game_state(game)
         print()
 
